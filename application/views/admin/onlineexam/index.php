@@ -310,22 +310,7 @@ function findOption($questionOpt, $find) {
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6">
-                        <label>exam name</label>
-                        <select class="form-control" name="exam_name" id="exam_name" style="display: inline-block;">
-                            <option value="">Exam Name </option>
-                            <?php
-                            foreach (exam_name as $class_key => $class_value) {
-                                ?>
-                                <option value="<?php echo $class_value['id']; ?>"><?php echo $class_value['class']; ?></option>
-                                <?php
-                            }
-                            ?>
 
-                        </select>
-
-                        <input class="form-control" type="text" name="exam_name" id="exam_name">
-                    </div>
                     <div class="col-md-2 col-sm-6">
                         <label style="display: block; visibility:hidden;">Search</label>
                         <button type="button" class="btn btn-info btn-sm post_search_submit"><?php echo $this->lang->line('search'); ?></button>

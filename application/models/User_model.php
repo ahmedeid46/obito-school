@@ -188,6 +188,15 @@ class User_model extends MY_Model {
             return false;
         }
     }
+    public function saveNewPassbyid($data) {
+        $this->db->where('user_id', $data['user_id']);
+        $query = $this->db->update('users', $data);
+        if ($query) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public function changeStatus($data) {
         $this->db->trans_start(); # Starting Transaction
@@ -209,6 +218,15 @@ class User_model extends MY_Model {
 
     public function saveNewUsername($data) {
         $this->db->where('id', $data['id']);
+        $query = $this->db->update('users', $data);
+        if ($query) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public function saveNewUsernamebyid($data) {
+        $this->db->where('user_id', $data['user_id']);
         $query = $this->db->update('users', $data);
         if ($query) {
             return true;

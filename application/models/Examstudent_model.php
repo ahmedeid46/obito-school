@@ -13,12 +13,12 @@ class Examstudent_model extends CI_Model {
 
     public function searchExamStudents($class_id, $section_id, $exam_id) {
 
-        $this->db->select('classes.id AS `class_id`,student_session.id as student_session_id,students.id,classes.class,sections.id AS `section_id`,sections.section,students.id,students.admission_no , students.roll_no,students.admission_date,students.firstname,  students.lastname,students.image,    students.mobileno, students.email ,students.state ,   students.city , students.pincode ,     students.religion,     students.dob ,students.current_address,    students.permanent_address,IFNULL(students.category_id, 0) as `category_id`,IFNULL(categories.category, "") as `category`,students.adhar_no,students.samagra_id,students.bank_account_no,students.bank_name, students.ifsc_code , students.guardian_name , students.guardian_relation,students.guardian_phone,students.guardian_address,students.is_active ,students.created_at ,students.updated_at,students.father_name,students.rte,students.gender,IFNULL(exam_group_class_batch_exam_students.id, 0) as onlineexam_student_id,IFNULL(exam_group_class_batch_exam_students.student_session_id, 0) as onlineexam_student_session_id')->from('students');
+        $this->db->select('exam_group_class_batch_exam_students.student_id as `student_id` ,exam_group_class_batch_exam_students.result as `result` ,classes.id AS `class_id`,student_session.id as student_session_id,students.id,classes.class,sections.id AS `section_id`,sections.section,students.id,students.admission_no , students.roll_no,students.admission_date,students.firstname,  students.lastname,students.image,    students.mobileno, students.email ,students.state ,   students.city , students.pincode ,     students.religion,     students.dob ,students.current_address,    students.permanent_address,IFNULL(students.category_id, 0) as `category_id`,IFNULL(categories.category, "") as `category`,students.adhar_no,students.samagra_id,students.bank_account_no,students.bank_name, students.ifsc_code , students.guardian_name , students.guardian_relation,students.guardian_phone,students.guardian_address,students.is_active ,students.created_at ,students.updated_at,students.father_name,students.rte,students.gender,IFNULL(exam_group_class_batch_exam_students.id, 0) as onlineexam_student_id,IFNULL(exam_group_class_batch_exam_students.student_session_id, 0) as onlineexam_student_session_id')->from('students');
         $this->db->join('student_session', 'student_session.student_id = students.id');
         $this->db->join('classes', 'student_session.class_id = classes.id');
         $this->db->join('sections', 'sections.id = student_session.section_id');
         $this->db->join('categories', 'students.category_id = categories.id', 'left');
-        $this->db->join('exam_group_class_batch_exam_students', 'exam_group_class_batch_exam_students.student_session_id = student_session.id and exam_group_class_batch_exam_students.exam_group_class_batch_exam_id=' . $exam_id, 'left');
+        $this->db->join('exam_group_class_batch_exam_students', 'exam_group_class_batch_exam_students.student_id=students.id', 'left');
         $this->db->where('student_session.session_id', $this->current_session);
 
         $this->db->where('student_session.class_id', $class_id);
@@ -50,25 +50,14 @@ class Examstudent_model extends CI_Model {
         return false;
     }
 
-    public function add_student($insert_array, $exam_group_class_batch_exam_id, $all_students) {
+    public function add_student($insert_array) {
 
-        $delete_array = array();
-        $inserted_array = array();
+
         $this->db->trans_begin();
         if (!empty($insert_array)) {
-            foreach ($insert_array as $insert_key => $insert_value) {
-                $this->insert($insert_value);
-                $inserted_array[] = $insert_value['student_session_id'];
-            }
+                $this->insert($insert_array);
         }
 
-        $delete_array = array_diff($all_students, $inserted_array);
-
-        if (!empty($delete_array)) {
-            $this->db->where('exam_group_class_batch_exam_id', $exam_group_class_batch_exam_id);
-            $this->db->where_in('student_session_id', $delete_array);
-            $this->db->delete('exam_group_class_batch_exam_students');
-        }
 
         if ($this->db->trans_status() === false) {
             $this->db->trans_rollback();
@@ -88,19 +77,23 @@ class Examstudent_model extends CI_Model {
     }
 
     public function insert($insert_value) {
-        $this->db->where('exam_group_class_batch_exam_id', $insert_value['exam_group_class_batch_exam_id']);
-        $this->db->where('student_session_id', $insert_value['student_session_id']);
+        $this->db->where('exam_id', $insert_value['exam_id']);
+        $this->db->where('student_id', $insert_value['student_id']);
         $q = $this->db->get('exam_group_class_batch_exam_students');
+        $num=$q->num_rows();
+        if ( $num== 1) {
+            $this->db->where('exam_id', $insert_value['exam_id']);
+            $this->db->where('student_id', $insert_value['student_id']);
+            $this->db->update('exam_group_class_batch_exam_students', $insert_value);
 
-        if ($q->num_rows() == 0) {
-
+        }else{
             $this->db->insert('exam_group_class_batch_exam_students', $insert_value);
         }
         return true;
     }
 
     public function getBatchStudentDetail($exam_group_class_batch_exam_student_id) {
-        $sql = "SELECT exam_group_class_batch_exam_students.*,sessions.session, exam_group_class_batch_exams.exam,exam_group_class_batch_exams.session_id, students.admission_no , students.id as `student_id`, students.roll_no,students.admission_date,students.firstname, students.lastname,students.image, students.mobileno, students.email ,students.state , students.city , students.pincode , students.religion,students.dob ,students.current_address, students.permanent_address,students.category_id, IFNULL(categories.category, '') as `category`, students.adhar_no,students.samagra_id,students.bank_account_no,students.bank_name, students.ifsc_code , students.guardian_name, students.guardian_relation,students.guardian_phone,students.guardian_address,students.is_active,`students`.`father_name`,`students`.`gender` FROM `exam_group_class_batch_exam_students` INNER join students on students.id=exam_group_class_batch_exam_students.student_id INNER JOIN exam_group_class_batch_exams on  exam_group_class_batch_exams.id=exam_group_class_batch_exam_students.exam_group_class_batch_exam_id LEFT JOIN `categories` ON `students`.`category_id` = `categories`.`id` INNER JOIN sessions on sessions.id=exam_group_class_batch_exams.session_id WHERE exam_group_class_batch_exam_students.id=" . $this->db->escape($exam_group_class_batch_exam_student_id);
+        $sql = "SELECT exam_group_class_batch_exam_students.*,sessions.session, exam_group_class_batch_exams.exam,exam_group_class_batch_exams.session_id, students.admission_no , students.id as `student_id`, students.roll_no,students.admission_date,students.firstname, students.lastname,students.image, students.mobileno, students.email ,students.state , students.city , students.pincode , students.religion,students.dob ,students.current_address, students.permanent_address,students.category_id, IFNULL(categories.category, '') as `category`, students.adhar_no,students.samagra_id,students.bank_account_no,students.bank_name, students.ifsc_code , students.guardian_name, students.guardian_relation,students.guardian_phone,students.guardian_address,students.is_active,`students`.`father_name`,`students`.`gender` FROM `exam_group_class_batch_exam_students` INNER join students on students.id=exam_group_class_batch_exam_students.student_id INNER JOIN exam_group_class_batch_exams on  exam_group_class_batch_exams.id=exam_group_class_batch_exam_students.exam_id LEFT JOIN `categories` ON `students`.`category_id` = `categories`.`id` INNER JOIN sessions on sessions.id=exam_group_class_batch_exams.session_id WHERE exam_group_class_batch_exam_students.id=" . $this->db->escape($exam_group_class_batch_exam_student_id);
 
         $query = $this->db->query($sql);
         return $query->row();
@@ -151,7 +144,7 @@ class Examstudent_model extends CI_Model {
 
     public function getStudentDetailsByExamAndStudentID($student_id, $exam_group_class_batch_exam_id) {
 
-        $sql = "SELECT exam_group_class_batch_exam_students.*,students.admission_no , students.id as `student_id`,students.admission_date,students.firstname, students.lastname,students.image, students.mobileno, students.email ,students.state , students.city , students.pincode , students.religion,students.dob ,students.current_address, students.permanent_address,students.category_id, IFNULL(categories.category, '') as `category`, students.adhar_no,students.samagra_id,students.bank_account_no,students.bank_name, students.ifsc_code , students.guardian_name, students.guardian_relation,students.guardian_phone,students.guardian_address,students.is_active,`students`.`father_name`,`students`.`mother_name`,`students`.`gender`,classes.class,sections.section  FROM `exam_group_class_batch_exam_students` INNER JOIN student_session on student_session.id=exam_group_class_batch_exam_students.student_session_id INNER JOIN students on students.id=student_session.student_id LEFT JOIN `categories` ON `students`.`category_id` = `categories`.`id` INNER JOIN classes on classes.id=student_session.class_id INNER JOIN sections on sections.id=student_session.section_id WHERE `exam_group_class_batch_exam_students`.`student_id` = " . $this->db->escape($student_id) . " AND `exam_group_class_batch_exam_students`.`exam_group_class_batch_exam_id` = " . $this->db->escape($exam_group_class_batch_exam_id);
+        $sql = "SELECT exam_group_class_batch_exam_students.*,students.admission_no , students.id as `student_id`,students.admission_date,students.firstname, students.lastname,students.image, students.mobileno, students.email ,students.state , students.city , students.pincode , students.religion,students.dob ,students.current_address, students.permanent_address,students.category_id, IFNULL(categories.category, '') as `category`, students.adhar_no,students.samagra_id,students.bank_account_no,students.bank_name, students.ifsc_code , students.guardian_name, students.guardian_relation,students.guardian_phone,students.guardian_address,students.is_active,`students`.`father_name`,`students`.`mother_name`,`students`.`gender`,classes.class,sections.section  FROM `exam_group_class_batch_exam_students` INNER JOIN students on students.id=student_session.student_id LEFT JOIN `categories` ON `students`.`category_id` = `categories`.`id` INNER JOIN classes on classes.id=student_session.class_id INNER JOIN sections on sections.id=student_session.section_id WHERE `exam_group_class_batch_exam_students`.`student_id` = " . $this->db->escape($student_id) . " AND `exam_group_class_batch_exam_students`.`exam_group_class_batch_exam_id` = " . $this->db->escape($exam_group_class_batch_exam_id);
 
         $query = $this->db->query($sql);
         return $query->row();
@@ -159,7 +152,7 @@ class Examstudent_model extends CI_Model {
 
     public function getStudentdetailByExam($student_id, $exam_group_class_batch_exam_id) {
 
-        $sql = "SELECT exam_group_class_batch_exam_students.*,students.admission_no , students.id as `student_id`,students.admission_date,students.firstname, students.lastname,students.image, students.mobileno, students.email ,students.state , students.city , students.pincode , students.religion,students.dob ,students.current_address, students.permanent_address,students.category_id, IFNULL(categories.category, '') as `category`, students.adhar_no,students.samagra_id,students.bank_account_no,students.bank_name, students.ifsc_code , students.guardian_name, students.guardian_relation,students.guardian_phone,students.guardian_address,students.is_active,`students`.`father_name`,`students`.`mother_name`,`students`.`gender`,student_session.class_id,student_session.section_id,classes.class,sections.section FROM `exam_group_class_batch_exam_students` INNER JOIN student_session on student_session.id=exam_group_class_batch_exam_students.student_session_id INNER JOIN students on students.id=student_session.student_id LEFT JOIN `categories` ON `students`.`category_id` = `categories`.`id` INNER JOIN classes on classes.id=student_session.class_id INNER JOIN sections on sections.id=student_session.section_id WHERE `exam_group_class_batch_exam_students`.`student_id` = " . $this->db->escape($student_id) . " AND `exam_group_class_batch_exam_students`.`exam_group_class_batch_exam_id` = " . $this->db->escape($exam_group_class_batch_exam_id);
+        $sql = "SELECT exam_group_class_batch_exam_students.*,students.admission_no , students.id as `student_id`,students.admission_date,students.firstname, students.lastname,students.image, students.mobileno, students.email ,students.state , students.city , students.pincode , students.religion,students.dob ,students.current_address, students.permanent_address,students.category_id, IFNULL(categories.category, '') as `category`, students.adhar_no,students.samagra_id,students.bank_account_no,students.bank_name, students.ifsc_code , students.guardian_name, students.guardian_relation,students.guardian_phone,students.guardian_address,students.is_active,`students`.`father_name`,`students`.`mother_name`,`students`.`gender`,student_session.class_id,student_session.section_id,classes.class,sections.section FROM `exam_group_class_batch_exam_students` INNER JOIN students on students.id=student_session.student_id LEFT JOIN `categories` ON `students`.`category_id` = `categories`.`id` INNER JOIN classes on classes.id=student_session.class_id INNER JOIN sections on sections.id=student_session.section_id WHERE `exam_group_class_batch_exam_students`.`student_id` = " . $this->db->escape($student_id) . " AND `exam_group_class_batch_exam_students`.`exam_group_class_batch_exam_id` = " . $this->db->escape($exam_group_class_batch_exam_id);
 
         $query = $this->db->query($sql);
         return $query->row_array();

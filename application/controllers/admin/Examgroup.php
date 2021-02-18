@@ -124,20 +124,27 @@ class Examgroup extends Admin_Controller {
         $data['title'] = 'Add Batch';
         $data['title_list'] = 'Recent Batch';
         $data['examType'] = $this->exam_type;
+        $class = $this->class_model->get();
+        $data['classlist'] = $class;
+
 
         $this->form_validation->set_rules('name', $this->lang->line('name'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('exam_type', $this->lang->line('exam') . " " . $this->lang->line('type'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('class', $this->lang->line('class'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('chapter', "chapter", 'trim|required|xss_clean');
+        $this->form_validation->set_rules('date', $this->lang->line('date'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('exam_no', 'exam_no', 'trim|required|xss_clean');
 
         if ($this->form_validation->run() == false) {
-            
+
         } else {
-            $is_active = 0;
 
             $data = array(
                 'name' => $this->input->post('name'),
-                'exam_type' => $this->input->post('exam_type'),
-                'is_active' => $is_active,
-                'description' => $this->input->post('description'),
+                'class' => $this->input->post('class'),
+                'section' => $this->input->post('section'),
+                'chapter' => $this->input->post('chapter'),
+                'date' => $this->input->post('date'),
+                'exam_no' => $this->input->post('exam_no'),
             );
 
             $insert_id = $this->examgroup_model->add($data);
@@ -302,17 +309,17 @@ class Examgroup extends Admin_Controller {
         $data['title'] = 'Add Batch';
         $data['title_list'] = 'Recent Batch';
 
-        $class = $this->class_model->get();
-        $data['classlist'] = $class;
-        $data['examType'] = $this->exam_type;
-        $session = $this->session_model->get();
-        $data['sessionlist'] = $session;
-        $subjectlist = $this->subject_model->get();
-        $data['subjectlist'] = $subjectlist;
 
         $data['current_session'] = $this->sch_current_session;
+        $examgroup = $this->examgroup_model->get($id);
+        $data['examgroup'] = $examgroup;
+        $data['class_id'] = $examgroup->class;
+        $data['section_id'] = $examgroup->section;
+        $data['exam_id'] = $examgroup->id;
+        $resultlist = $this->examstudent_model->searchExamStudents($data['class_id'], $data['section_id'], $data['exam_id']);
 
-        $data['examgroup'] = $this->examgroup_model->get($id);
+        $data['resultlist'] = $resultlist;
+
 
         $this->load->view('layout/header', $data);
         $this->load->view('admin/examgroup/addexam', $data);
@@ -853,50 +860,29 @@ class Examgroup extends Admin_Controller {
     }
 
     public function entrystudents() {
-        $this->form_validation->set_error_delimiters('', '');
-        $this->form_validation->set_rules('exam_group_class_batch_exam_id', $this->lang->line('exam'), 'required|trim|xss_clean');
 
-        if ($this->form_validation->run() == false) {
-
-            $data = array(
-                'exam_group_class_batch_exam_id' => form_error('exam_group_class_batch_exam_id'),
-            );
-
-            $array = array('status' => 0, 'error' => $data);
-            echo json_encode($array);
-        } else {
-            $check_alreay_inserted_students = array();
-            $state = 1;
-            $exam_group_class_batch_exam_id = $this->input->post('exam_group_class_batch_exam_id');
-            $student_session = $this->input->post('student_session_id');
-            $all_students = $this->input->post('all_students');
+            $result = $this->input->post('result');
+            $student_id = $this->input->post('id_student');
+            $exam_id = $this->input->post('exam_id');
             $insert_array = array();
-            if (isset($student_session) && !empty($student_session)) {
-                foreach ($student_session as $student_key => $student_value) {
-                    $check_alreay_inserted_students[] = $this->input->post('student_' . $student_value);
-                    $insert_array[] = array(
-                        'exam_group_class_batch_exam_id' => $exam_group_class_batch_exam_id,
-                        'student_id' => $this->input->post('student_' . $student_value),
-                        'student_session_id' => $student_value,
+            if (isset($student_id) && !empty($student_id)) {
+                    $insert_array = array(
+                        'result' => $result,
+                        'student_id' => $student_id,
+                        'exam_id' => $exam_id,
                     );
-                }
+
+            }else{
+                $array = array('status' => '0', 'error' => 'error', 'message' => "");
+
             }
 
-            // if (!empty($check_alreay_inserted_students)) {
-            //     $student_exists = $this->examstudent_model->checkStudentExists($check_alreay_inserted_students, $exam_group_class_batch_exam_id);
-            //     if (!empty($student_exists)) {
-            //         $state = 0;
-            //     }
-            // }
-            // if ($state) {
-            $this->examstudent_model->add_student($insert_array, $exam_group_class_batch_exam_id, $all_students);
+
+            $this->examstudent_model->add_student($insert_array);
             $array = array('status' => '1', 'error' => '', 'message' => $this->lang->line('success_message'));
-            // } else {
-            //     $array = array('status' => '0', 'error' => '', 'message' => $this->lang->line('some_students_are_already_added_in_other_session'));
-            // }
 
             echo json_encode($array);
-        }
+
     }
 
 }

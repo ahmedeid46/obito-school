@@ -23,15 +23,6 @@
                             <th>
                                 <?php echo $this->lang->line('teacher'); ?>
                             </th>
-                            <th>
-                                <?php echo $this->lang->line('time') . " " . $this->lang->line('from') ?>
-                            </th>
-                            <th>
-                                <?php echo $this->lang->line('time') . " " . $this->lang->line('to') ?>
-                            </th>
-                            <th>
-                                <?php echo $this->lang->line('room') . " " . $this->lang->line('no') ?>
-                            </th>
                             <th class="text-right">
                                 <?php echo $this->lang->line('action') ?>
                             </th>
@@ -82,25 +73,11 @@
                                         ?>
                                     </select>
                                 </td>
-                                <td>
-                                    <div class="input-group">
-                                        <input type="text" name="time_from_<?php echo $counter; ?>" class="form-control time_from time" id="time_from_<?php echo $counter; ?>" value="<?php echo $prev_rec_value->time_from; ?>">
-                                        <div class="input-group-addon">
-                                            <span class="fa fa-clock-o"></span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group">
-                                        <input type="text" name="time_to_<?php echo $counter; ?>" class="form-control time_to time" id="time_to_<?php echo $counter; ?>" value="<?php echo $prev_rec_value->time_to; ?>">
-                                        <div class="input-group-addon">
-                                            <span class="fa fa-clock-o"></span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <input type="text" name='room_no_<?php echo $counter; ?>' value="<?php echo $prev_rec_value->room_no; ?>" placeholder='Room no' class="form-control room_no" id="room_no_<?php echo $counter; ?>"/>
-                                </td>
+
+                                    <input type="hidden" name="time_from_<?php echo $counter; ?>" class="form-control time_from time" id="time_from_<?php echo $counter; ?>" value="<?php echo $prev_rec_value->time_from; ?>">
+                                    <input type="hidden" name="time_to_<?php echo $counter; ?>" class="form-control time_to time" id="time_to_<?php echo $counter; ?>" value="<?php echo $prev_rec_value->time_to; ?>">
+                                    <input type="hidden" name='room_no_<?php echo $counter; ?>' value="<?php echo $prev_rec_value->room_no; ?>" placeholder='Room no' class="form-control room_no" id="room_no_<?php echo $counter; ?>"/>
+
                                 <td class="text-right"><button class="ibtnDel btn btn-danger btn-sm btn-danger"> <i class="fa fa-trash"></i></button></td>
 
                             </tr>
@@ -142,25 +119,10 @@
                                     ?>
                                 </select>
                             </td>
-                            <td>
-                                <div class="input-group">
-                                    <input type="text" name="time_from_<?php echo $total_count; ?>" class="form-control time_from time" id="time_from_<?php echo $total_count; ?>" aria-invalid="false">
-                                    <div class="input-group-addon">
-                                        <span class="fa fa-clock-o"></span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="input-group">
-                                    <input type="text" name="time_to_<?php echo $total_count; ?>" class="form-control time_to time" id="time_to_<?php echo $total_count; ?>" aria-invalid="false">
-                                    <div class="input-group-addon">
-                                        <span class="fa fa-clock-o"></span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <input type="text" name='room_no_<?php echo $total_count; ?>' id='room_no_<?php echo $total_count; ?>' placeholder='Room no' class="form-control room_no"/>
-                            </td>
+                            <input type="hidden" name="time_from_<?php echo $counter; ?>" class="form-control time_from time" id="time_from_<?php echo $counter; ?>" value="12:00 AM">
+                            <input type="hidden" name="time_to_<?php echo $counter; ?>" class="form-control time_to time" id="time_to_<?php echo $counter; ?>" value="11:59 PM">
+                            <input type="hidden" name='room_no_<?php echo $counter; ?>' value="online" placeholder='Room no' class="form-control room_no" id="room_no_<?php echo $counter; ?>"/>
+
                             <td class="text-right"><button class="ibtnDel btn btn-danger btn-sm btn-danger"> <i class="fa fa-trash"></i></button></td>
 
                         </tr>

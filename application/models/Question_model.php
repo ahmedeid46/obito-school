@@ -53,6 +53,7 @@ class Question_model extends MY_model {
         $this->db->select('questions.*,subjects.name')->from('questions');
 
         $this->db->join('subjects', 'subjects.id = questions.subject_id');
+        $this->db->join('classes', 'classes.id = questions.class_id');
         if ($id != null) {
             $this->db->where('questions.id', $id);
         } else {

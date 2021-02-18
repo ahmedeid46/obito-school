@@ -92,7 +92,7 @@ class User extends Student_Controller
             $data['sch_setting']          = $this->sch_setting_detail;
             $data['adm_auto_insert']      = $this->sch_setting_detail->adm_auto_insert;
             $data['examSchedule']         = array();
-            $data['exam_result']          = $this->examgroupstudent_model->searchStudentExams($student['student_session_id'], true, true);
+            //$data['exam_result']          = $this->examgroupstudent_model->searchStudentExams($student['student_session_id'], true, true);
             $ss                           = $this->grade_model->getGradeDetails();
             $data['exam_grade']           = $this->grade_model->getGradeDetails();
             $student_doc                  = $this->student_model->getstudentdoc($student_id);

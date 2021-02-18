@@ -1,25 +1,25 @@
 
-<div class="content-wrapper"> 
+<div class="content-wrapper">
     <section class="content-header">
         <h1>
             <i class="fa fa-mortar-board"></i> <?php echo $this->lang->line('academics'); ?> <small><?php echo $this->lang->line('student_fees1'); ?></small></h1>
-    </section> 
+    </section>
     <!-- Main content -->
     <section class="content">
         <div class="row">
             <?php
             if ($this->rbac->hasPrivilege('lesson', 'can_add')) {
-                ?>        
-                <div class="col-md-4">       
+                ?>
+                <div class="col-md-4">
                     <div class="box box-primary">
                         <div class="box-header with-border">
                             <h3 class="box-title"><?php echo $this->lang->line('add') . " " . $this->lang->line('lesson'); ?></h3>
-                        </div>  
+                        </div>
                         <form id="lesson_form" name="lesson_form" method="post" accept-charset="utf-8">
                             <div class="box-body">
                                 <?php if ($this->session->flashdata('msg')) { ?>
                                     <?php echo $this->session->flashdata('msg') ?>
-                                <?php } ?> 
+                                <?php } ?>
                                 <?php echo $this->customlib->getCSRF(); ?>
                                 <div class="form-group">
 
@@ -34,9 +34,9 @@
                                                 echo "selected";
                                             }
                                             ?> value="<?php echo $class['id'] ?>" ><?php echo $class['class'] ?></option>
-                                                <?php
-                                            }
-                                            ?>
+                                            <?php
+                                        }
+                                        ?>
                                     </select>
                                     <input type="hidden" id="lesson_subjectid" name="lesson_subjectid"  >
                                     <span class="class_id_error text-danger"><?php echo form_error('class_id'); ?></span>
@@ -70,7 +70,7 @@
                                     <?php ?>
                                     <lebel class="btn btn-xs btn-info pull-right" onclick="add_lesson()"><?php echo $this->lang->line('add') . " " . $this->lang->line('more'); ?></lebel>
 
-                                </div>                       
+                                </div>
 
                                 <div id="lesson_result"></div>
                             </div>
@@ -87,7 +87,7 @@
             } else {
                 echo "12";
             }
-            ?>">              
+            ?>">
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title"><?php echo $this->lang->line("lesson") . " " . $this->lang->line('list') ?></h3>
@@ -95,7 +95,7 @@
                         </div>
                     </div>
                     <div class="box-body">
-                        <div class="mailbox-controls">                            
+                        <div class="mailbox-controls">
                             <div class="pull-right">
                             </div>
                         </div>
@@ -109,8 +109,8 @@
 
 
                                 <thead>
-                                    <tr class="hide" id="visible">
-                                        <td colspan="6"><center><b><?php echo $this->lang->line("lesson") . " " . $this->lang->line('list') ?></b></center></td>
+                                <tr class="hide" id="visible">
+                                    <td colspan="6"><center><b><?php echo $this->lang->line("lesson") . " " . $this->lang->line('list') ?></b></center></td>
                                 </tr>
                                 <tr>
                                     <th><?php echo $this->lang->line('class'); ?></th>
@@ -122,40 +122,40 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    foreach ($result as $key => $result_value) {
-                                        if (in_array($result_value['classid'], $class_array)) {
-                                            $lesson_id = $key;
-                                            ?>   
-                                            <tr>
+                                <?php
+                                foreach ($result as $key => $result_value) {
+                                    if (in_array($result_value['classid'], $class_array)) {
+                                        $lesson_id = $key;
+                                        ?>
+                                        <tr>
 
 
-                                                <td><?php echo $result_value['cname']; ?></td>
-                                                <td><?php echo $result_value['sname']; ?></td>
-                                                <td><?php echo $result_value['sgname']; ?></td>
-                                                <td><?php echo $result_value['subname']; ?></td>
-                                                <td><?php
-                                                    foreach (($lessonname[$lesson_id]) as $rl_value) {
-                                                        echo $rl_value['name'] . '<br>';
-                                                    };
-                                                    ?></td>
-                                                <td class="mailbox-date pull-right no-print">
-                                                    <?php if ($this->rbac->hasPrivilege('lesson', 'can_edit')) { ?>
-                                                        <a data-placement="left" href="<?php echo base_url(); ?>admin/lessonplan/editlesson/<?php echo $result_value['subject_group_class_sections_id'] ?>/<?php echo $result_value['subject_group_subject_id'] ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>"><i class="fa fa-pencil"></i></a>
-                                                    <?php } if ($this->rbac->hasPrivilege('lesson', 'can_delete')) { ?>
-                                                        <a data-placement="left" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="deletelessonbulk('<?php echo $result_value['subject_group_class_sections_id'] ?>', '<?php echo $result_value['subject_group_subject_id'] ?>');"><i class="fa fa-remove"></i></a>
-                                                    <?php } ?>                                                   
-                                                </td>
-                                            </tr>
-                                        <?php }
-                                    }
-                                    ?>                                  
+                                            <td><?php echo $result_value['cname']; ?></td>
+                                            <td><?php echo $result_value['sname']; ?></td>
+                                            <td><?php echo $result_value['sgname']; ?></td>
+                                            <td><?php echo $result_value['subname']; ?></td>
+                                            <td><?php
+                                                foreach (($lessonname[$lesson_id]) as $rl_value) {
+                                                    echo $rl_value['name'] . '<br>';
+                                                };
+                                                ?></td>
+                                            <td class="mailbox-date pull-right no-print">
+                                                <?php if ($this->rbac->hasPrivilege('lesson', 'can_edit')) { ?>
+                                                    <a data-placement="left" href="<?php echo base_url(); ?>admin/lessonplan/editlesson/<?php echo $result_value['subject_group_class_sections_id'] ?>/<?php echo $result_value['subject_group_subject_id'] ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>"><i class="fa fa-pencil"></i></a>
+                                                <?php } if ($this->rbac->hasPrivilege('lesson', 'can_delete')) { ?>
+                                                    <a data-placement="left" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="deletelessonbulk('<?php echo $result_value['subject_group_class_sections_id'] ?>', '<?php echo $result_value['subject_group_subject_id'] ?>');"><i class="fa fa-remove"></i></a>
+                                                <?php } ?>
+                                            </td>
+                                        </tr>
+                                    <?php }
+                                }
+                                ?>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                     <div class="box-footer">
-                        <div class="mailbox-controls">  
+                        <div class="mailbox-controls">
                             <div class="pull-right">
                             </div>
                         </div>
@@ -163,10 +163,10 @@
                 </div>
             </div>
         </div>
-        <div class="row">          
+        <div class="row">
             <div class="col-md-12">
             </div>
-        </div> 
+        </div>
     </section>
 
 </div>
@@ -411,8 +411,8 @@
         var divElements = document.getElementById('transfee').innerHTML;
         var oldPage = document.body.innerHTML;
         document.body.innerHTML =
-                "<html><head><title></title></head><body>" +
-                divElements + "</body>";
+            "<html><head><title></title></head><body>" +
+            divElements + "</body>";
         window.print();
         document.body.innerHTML = oldPage;
         location.reload(true);

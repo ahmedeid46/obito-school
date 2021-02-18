@@ -14,40 +14,26 @@
                 <div class="box box-primary">
                     <div class="box-header ptbnull">
                         <h3 class="box-title titlefix"> <?php echo $this->lang->line('exam') . " " . $this->lang->line('list'); ?></h3>
-                        <div class="impbtntitle">
-                            <?php 
-                            if($this->rbac->hasPrivilege('exam','can_add')){
-                                ?>
-                                <a tabindex="-1" class="btn btn-primary btn-sm" href="#" id="examModalButton"> <?php echo $this->lang->line('new') . " " . $this->lang->line('exam') ?></a>
-                                <?php
-                            }
-                            if($this->rbac->hasPrivilege('link_exam','can_view')){
-                                ?>
-                                <a tabindex="-1" class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#examconnectModal" href="#" id="examconnectModalButton" data-examGroup_id="<?php echo $examgroup->id; ?>"> <?php echo $this->lang->line('link') . " " . $this->lang->line('exams'); ?></a>
-                                <?php
-                            }
-                                ?>
-                            
 
-                            
-                            
-                            
-                        </div>
                     </div><!-- /.box-header -->
                     <div class="box-body">
-                        <input type="hidden" name="current_session" id="current_session" value="<?php echo $current_session; ?>">
 
                         <div class="row pb10">
                             <div class="col-lg-2 col-md-3 col-sm-12 col-xs-6">
-                                <p class="examinfo"><span> <?php echo $this->lang->line('exam') . " " . $this->lang->line('group'); ?></span> <?php echo $examgroup->name; ?></p>
+                                <p class="examinfo"><span> <?php echo $this->lang->line('exam') . " " . $this->lang->line('name'); ?></span> <?php echo $examgroup->name; ?></p>
                             </div><!--./col-lg-4-->
                             <div class="col-lg-2 col-md-3 col-sm-12 col-xs-6">
-                                <p class="examinfo"><span> <?php echo $this->lang->line('exam') . " " . $this->lang->line('type') ?></span> <?php echo $examType[$examgroup->exam_type]; ?></p>
+                                <p class="examinfo"><span> <?php echo $this->lang->line('class') ; ?></span> <?php echo $examgroup->class; ?></p>
                             </div><!--./col-lg-4-->
                             <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
-                                <p class="examinfo"><span> <?php echo $this->lang->line('description'); ?> </span> <?php echo $examgroup->description; ?></p>
+                                <p class="examinfo"><span> <?php echo $this->lang->line('section'); ?> </span> <?php echo $examgroup->section; ?></p>
                             </div><!--./col-lg-4-->
-
+                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-6">
+                                <p class="examinfo"><span> <?php echo $this->lang->line('date') ; ?></span> <?php echo $examgroup->date; ?></p>
+                            </div><!--./col-lg-4-->
+                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-6">
+                                <p class="examinfo"><span> chapter </span> <?php echo $examgroup->chapter; ?></p>
+                            </div><!--./col-lg-4-->
                         </div><!--./row-->
                         <div class="divider2"></div>
                         <div class="row">
@@ -65,24 +51,87 @@
                         <div class="table-responsive mailbox-messages" id="exam_tbl" >
                             <div class="download_label"><?php echo $this->lang->line('expense_list'); ?></div>
 
-                            <table class="table table-hover table-striped table-bordered loading1" id="exam_table">
-                                <thead>
-                                    <tr>
-                                        <th><?php echo $this->lang->line('name'); ?></th>
 
-                                        <th><?php echo $this->lang->line('session') ?></th>
-                                        <th><?php echo $this->lang->line('subjects') . " " . $this->lang->line('included'); ?></th>
+                                <?php
+                                if (isset($resultlist) && !empty($resultlist)) {
+                                    ?>
+                                    <div class="row">
 
-                                        <th class="text text-center"><?php echo $this->lang->line('status'); ?></th>
-                                            <th class="text text-center"><?php echo $this->lang->line('publish')." ".$this->lang->line('result'); ?></th>
-                                        <th class=""><?php echo $this->lang->line('description') ?></th>
-                                        <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                                        <div class="col-md-12">
 
-                                </tbody>
-                            </table><!-- /.table -->
+
+                                            <div class=" table-responsive ptt10">
+
+                                                <table class="table table-striped">
+                                                    <tbody>
+                                                    <tr>
+
+                                                        <th><?php echo $this->lang->line('admission_no'); ?></th>
+
+                                                        <th><?php echo $this->lang->line('student_name'); ?></th>
+                                                        <?php if ($sch_setting->category) { ?>
+                                                            <th><?php echo $this->lang->line('category'); ?></th>
+                                                        <?php } ?>
+                                                        <th><?php echo $this->lang->line('gender'); ?></th>
+<th>result %</th>
+
+                                                    </tr>
+                                                    <?php
+                                                    if (empty($resultlist)) {
+                                                        ?>
+                                                        <tr>
+                                                            <td colspan="7" class="text-danger text-center"><?php echo $this->lang->line('no_record_found'); ?></td>
+                                                        </tr>
+                                                        <?php
+                                                    } else {
+                                                        $counter = 1;
+                                                        foreach ($resultlist as $student) {
+                                                            ?>
+                                                                <td><?php echo $student['admission_no']; ?></td>
+
+                                                                <td><?php echo $student['firstname'] . " " . $student['lastname']; ?></td>
+                                                                <?php if ($sch_setting->category) { ?>
+                                                                    <td><?php echo $student['category']; ?></td>
+                                                                <?php } ?>
+                                                                <td><?php echo $student['gender']; ?></td>
+
+
+                                                                <td>
+                                                                    <form method="post" action="<?php echo site_url('admin/examgroup/entrystudents') ?>" id="allot_exam_student">
+                                                                        <input type="hidden" name="current_session" id="current_session" value="<?php echo $current_session; ?>">
+                                                                        <input type="hidden" name="exam_id" value="<?php echo $examgroup->id; ?>">
+                                                                        <input hidden name="id_student" value="<?php echo $student['id'] ?>.">
+                                                                    <div class="form-group col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                                                                        <input type="number" max="100" min="0" class="form-control" id="result" name="result" autocomplete="off">
+                                                                    </div>
+                                                                        <?php if ($this->rbac->hasPrivilege('exam_assign_view_student', 'can_edit')) { ?>
+                                                                            <button type="submit" class="btn btn-primary btn-sm pull-right" id="load" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Please Wait.."><?php echo $this->lang->line('save'); ?>
+                                                                            </button>
+                                                                        <?php } ?>
+                                                                    </form>
+                                                                </td>
+                                                            <?php  foreach ($resultlist as $result){
+                                                                if ($result['student_id']==$student['id']){
+                                                                    echo "<td>".$result['result']." </td>";
+                                                                }
+                                                            }?>
+                                                            </tr>
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                    </tbody></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <div style="padding-top: 10px;"><?php //echo $this->lang->line('no_record_found');  ?></div>
+                                    <div class="alert alert-danger "><?php echo $this->lang->line('no_record_found'); ?></div>
+                                    <?php
+                                }
+                                ?>
 
 
 
@@ -782,7 +831,7 @@ if (set_value('class_id') == $class['id']) {
             },
             success: function (data)
             {
-                $('#exam_tbl').find('tbody').empty().append(data.exam_page);
+               // $('#exam_tbl').find('tbody').empty().append(data.exam_page);
                 // console.log(data.query);
 
             },

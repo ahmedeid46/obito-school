@@ -119,39 +119,13 @@
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                         <div class="form-group">
-                                            <label for="pwd"><?php echo $this->lang->line('sub_topic'); ?></label>
-                                            <input type="text" id="sub_topic" name="sub_topic" class="form-control " />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4">
-                                        <div class="form-group">
                                             <label for="pwd"><?php echo $this->lang->line('date'); ?></label><small class="req"> *</small>
                                             <input type="text" id="date" readonly name="date" class="form-control " >
                                         </div>
                                     </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4">
-                                        <div class="form-group">
-                                            <label for="pwd"><?php echo $this->lang->line('time') . " " . $this->lang->line('from'); ?></label><small class="req"> *</small>
-                                            <div class="input-group ">
-                                                <input class="form-control time" readonly name="time_from" id="time_from" type="text" value="">
-                                                <span class="input-group-addon" id="basic-addon2">
-                                                    <i class="fa fa-clock-o"></i>
-                                                </span>
-                                                </input>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4">
-                                        <div class="form-group">
-                                            <label for="pwd"><?php echo $this->lang->line('time') . " " . $this->lang->line('to'); ?></label><small class="req"> *</small>
-                                            <div class="input-group "><input type="text" readonly id="time_to" name="time_to" class="form-control " >
-                                                <span class="input-group-addon" id="basic-addon2">
-                                                    <i class="fa fa-clock-o"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
 
+                                    <input class="form-control time" readonly name="time_from" id="time_from" type="hidden" value="12:00 AM">
+                                    <input type="hidden" readonly id="time_to" name="time_to" class="form-control " value="11:59 PM" >
                                     <div class="col-lg-4 col-md-4 col-sm-12">
                                         <div class="form-group">
                                             <label for="pwd"><?php echo $this->lang->line('lecture_youtube_url'); ?></label>
@@ -168,31 +142,6 @@
                                         <div class="form-group">
                                             <label for="pwd"><?php echo $this->lang->line('attachment'); ?></label>
                                             <input type="file" id="file"  name="file" class="form-control filestyle">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="pwd"><?php echo $this->lang->line('teaching_method'); ?></label>
-                                            <textarea type="text" id="teaching_method" name="teaching_method" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="pwd"><?php echo $this->lang->line('general_objectives'); ?></label>
-                                            <textarea type="text" id="general_objectives" name="general_objectives" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="pwd"><?php echo $this->lang->line('previous_knowledge'); ?></label>
-                                            <textarea type="text" id="previous_knowledge" name="previous_knowledge" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="pwd"><?php echo $this->lang->line('comprehensive_questions'); ?>  </label>
-                                            <textarea type="text" id="comprehensive_questions" name="comprehensive_questions" class="form-control"></textarea>
                                         </div>
                                     </div>
 

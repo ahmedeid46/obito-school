@@ -1,5 +1,5 @@
 <?php
-
+$lang['techer_login']='teacher login';
 $lang['absent'] = 'Absent';
 $lang['absent_student'] = 'Absent Student';
 $lang['academic_fees_detail'] = 'Academic Fees Detail';

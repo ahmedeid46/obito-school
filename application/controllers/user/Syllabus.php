@@ -10,7 +10,7 @@ class Syllabus extends Student_Controller {
     }
 
     public function index() {
-        $this->load->library('encrypt');
+        //$this->load->library('encrypt');
         $this->session->set_userdata('top_menu', 'syllabus');
 
 
